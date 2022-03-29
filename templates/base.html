@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="website description" />
+    <meta name="keywords" content="website keywords, website keywords" />
+    <link rel="stylesheet" type="text/css" href="style/style.css" title="style" />
+    <title>{% block title %}{% endblock %}</title>
+    {% block style %}{% endblock %}
+</head>
+
+<body>
+    <div id="main">
+        <div id="header">
+            <div id="logo">
+                <div id="logo_text">
+                    <!-- class="logo_colour", allows you to change the colour of the text -->
+                    <h1><a href="/">Sky<span class="logo_colour">Taxi</span></a></h1>
+                    <h2>Заказ такси онлайн.</h2>
+                    <h3>Текущая дата: {{data.date}}</h3>
+                </div>
+            </div>
+            {% block menu %}{% endblock %}
+        </div>
+        <div id="site_content">
+            {% block sidebar %}{% endblock %} {% block content %}{% endblock %}
+        </div>
+        {% block footer %}{% endblock %}
+    </div>
+</body>
+
+</html>
