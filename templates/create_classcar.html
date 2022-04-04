@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{data.title}}
+{% endblock %}
+
+{% block style %}
+    {% include "include/inc-style.html" %}
+{% endblock %}
+
+{% block menu %}
+    {% include "include/inc-menu.html" %}
+{% endblock %}
+
+{% block sidebar %}
+    {% include "include/inc-sidebar.html"%}
+{% endblock %}
+{% block content %}
+<div id="content">
+<h1>Создание класса авто</h1>
+<form method="post">
+    <input type="text" name="name" placeholder="Название">
+    <button type="submit">Сохранить и вернуться на главную</button>
+</form>
+</div>
+{% endblock %}
+
+{% block footer %}
+    {% include "include/inc-footer.html" %}
+{% endblock %}

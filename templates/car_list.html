@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{data.title}}
+{% endblock %}
+
+{% block style %}
+    {% include "include/inc-style.html" %}
+{% endblock %}
+
+{% block menu %}
+    {% include "include/inc-menu.html" %}
+{% endblock %}
+
+{% block sidebar %}
+    {% include "include/inc-sidebar.html"%}
+{% endblock %}
+{% block content %}
+<div id="content">
+    <div>
+        <a href="/">назад на главную</a>
+    </div>
+
+    <br>
+    <br>
+
+    <div>
+        <a href="/create-car/?id={{id}}">Создать новый авто</a>
+        <br>
+        <h1>Список автомобилей для класса авто "{{name}}"</h1>
+        {% for item in objects_list %}
+        <li>
+            {{item.name}} <span><a href="/copy-car/?name={{item.name}}">скопировать</a></span>
+        </li>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+    {% include "include/inc-footer.html" %}
+{% endblock %}

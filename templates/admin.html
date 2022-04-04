@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{data.title}}
+{% endblock %}
+
+{% block style %}
+    {% include "include/inc-style.html" %}
+{% endblock %}
+
+{% block menu %}
+    {% include "include/inc-menu.html" %}
+{% endblock %}
+
+{% block sidebar %}
+    {% include "include/inc-sidebar.html"%}
+{% endblock %}
+{% block content %}
+<div id="content">
+    <!-- insert the page content here -->
+    <h1>Страница для администратора</h1>
+    <p>Создайте категории авто для такси и классами автомобилей.</p>
+    <ul>{% for item in objects_list %}
+        <li>- {{item.name}} <span>доступных авто: </span>
+            <a href="/cars-list/?id={{item.id}}">Показать авто</a>
+        </li>
+        {% endfor %}
+        	<div>
+		<a href="/create-classcar/">Создать новый класс авто</a>
+	</div>
+    </ul>
+</div>
+{% endblock %}
+
+{% block footer %}
+    {% include "include/inc-footer.html" %}
+{% endblock %}
