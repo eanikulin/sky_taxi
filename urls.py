@@ -1,5 +1,5 @@
 from datetime import date
-from views import *
+# from views import *
 
 
 # front controller
@@ -14,14 +14,14 @@ def other_front(request):
 
 fronts = [secret_front, other_front]
 
-routes = {
-    '/': About(),
-    '/admin/': AdminPanel(),
-    '/orders/': Orders(),
-    '/contacts/': Contacts(),
-    '/cars-list/': CarsList(),
-    '/create-car/': CreateCar(),
-    '/create-classcar/': CreateClassCar(),
-    '/classcar-list/': ClassCarList(),
-    '/copy-car/': CopyCar()
-}
+# routes = {
+#     '/': About(),
+#     '/admin/': AdminPanel(),
+#     '/orders/': Orders(),
+#     '/contacts/': Contacts(),
+#     '/cars-list/': CarsList(),
+#     '/create-car/': CreateCar(),
+#     '/create-classcar/': CreateClassCar(),
+#     '/classcar-list/': ClassCarList(),
+#     '/copy-car/': CopyCar()
+# }

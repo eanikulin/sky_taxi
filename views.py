@@ -1,17 +1,24 @@
 from sky_framework.templator import render
 from patterns.сreational_patterns import Engine, Logger
+from patterns.structural_patterns import AppRoute, Debug
 
 site = Engine()
 logger = Logger('main')
+routes = {}
+
 def context(request):return {'date': request.get('date', None), 'year': request.get('year', None)}
 
+@AppRoute(routes=routes, url='/')
 class About:
+    @Debug(name='About')
     def __call__(self, request):
         data = context(request)
         data['title'] = 'О нас - Sky Taxi'
         return '200 OK', render('index.html', data=data, objects_list=site.classescars)
 
+@AppRoute(routes=routes, url='/admin/')
 class AdminPanel:
+    @Debug(name='AdminPanel')
     def __call__(self, request):
         data = context(request)
         data['title'] = 'Административная панель - Sky Taxi'
@@ -19,12 +26,15 @@ class AdminPanel:
 
 # контроллер 404
 class NotFound404:
+    @Debug(name='NotFound404')
     def __call__(self, request):
         return '404 WHAT', '404 PAGE Not Found'
 
 
 # контроллер - список автомобилей
+@AppRoute(routes=routes, url='/cars-list/')
 class CarsList:
+    @Debug(name='CarsList')
     def __call__(self, request):
         data = context(request)
         data['title'] = 'Список автомобилей'
@@ -40,9 +50,11 @@ class CarsList:
 
 
 # контроллер - создать авто
+@AppRoute(routes=routes, url='/create-car/')
 class CreateCar:
     classcar_id = -1
 
+    @Debug(name='CreateCar')
     def __call__(self, request):
         data = context(request)
         data['title'] = 'Создание авто'
@@ -78,7 +90,10 @@ class CreateCar:
 
 
 # контроллер - создать класс авто
+@AppRoute(routes=routes, url='/create-classcar/')
 class CreateClassCar:
+
+    @Debug(name='CreateClassCar')
     def __call__(self, request):
         data = context(request)
         data['title'] = 'Создание класса'
@@ -109,8 +124,10 @@ class CreateClassCar:
 
 
 # контроллер - список классов авто
+@AppRoute(routes=routes, url='/classcar-list/')
 class ClassCarList:
 
+    @Debug(name='ClassCarList')
     def __call__(self, request):
         logger.log('Список классов авто')
         data = context(request)
@@ -120,7 +137,10 @@ class ClassCarList:
 
 
 # контроллер - копировать авто
+@AppRoute(routes=routes, url='/copy-car/')
 class CopyCar:
+
+    @Debug(name='CopyCar')
     def __call__(self, request):
         data = context(request)
         data['title'] = 'Список классов авто'
@@ -142,14 +162,19 @@ class CopyCar:
         except KeyError:
             return '200 OK', 'No cars have been added yet'
 
+@AppRoute(routes=routes, url='/orders/')
 class Orders:
+
+    @Debug(name='Orders')
     def __call__(self, request):
         data = context(request)
         data['title'] = 'Заказы - Sky Taxi'
         return '200 OK', render('orders.html', data=data)
 
-
+@AppRoute(routes=routes, url='/contacts/')
 class Contacts:
+
+    @Debug(name='Contacts')
     def __call__(self, request):
         data = context(request)
         data['title'] = 'Контакты - Sky Taxi'
