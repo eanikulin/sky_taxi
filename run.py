@@ -1,5 +1,5 @@
 from wsgiref.simple_server import make_server
-from sky_framework.main import Framework
+from sky_framework.main import Framework, DebugApplication
 from urls import fronts
 from views import routes
 

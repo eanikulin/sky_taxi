@@ -1,5 +1,6 @@
 from time import time
 
+
 # структурный паттерн - Декоратор
 class AppRoute:
     def __init__(self, routes, url):
@@ -20,7 +21,6 @@ class AppRoute:
 class Debug:
 
     def __init__(self, name):
-
         self.name = name
 
     def __call__(self, cls):
@@ -34,6 +34,7 @@ class Debug:
             нужен для того, чтобы декоратор класса wrapper обернул в timeit
             каждый метод декорируемого класса
             '''
+
             def timed(*args, **kw):
                 ts = time()
                 result = method(*args, **kw)
@@ -46,8 +47,3 @@ class Debug:
             return timed
 
         return timeit(cls)
-
-
-#func()
-#obj = MyClass()
-#obj()
