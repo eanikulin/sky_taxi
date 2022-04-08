@@ -1,10 +1,12 @@
 from copy import deepcopy
 from quopri import decodestring
+from .behavioral_patterns import FileWriter, Subject
 
 
 # абстрактный пользователь
 class User:
-    pass
+    def __init__(self, name):
+        self.name = name
 
 
 # пассажир
@@ -14,9 +16,12 @@ class Passenger(User):
 
 # водитель такси
 class Driver(User):
-    pass
 
+    def __init__(self, name):
+        self.cars = []
+        super().__init__(name)
 
+# порождающий паттерн Абстрактная фабрика - фабрика пользователей
 class UserFactory:
     types = {
         'driver': Driver,
@@ -25,8 +30,8 @@ class UserFactory:
 
     # порождающий паттерн Фабричный метод
     @classmethod
-    def create(cls, type_):
-        return cls.types[type_]()
+    def create(cls, type_, name):
+        return cls.types[type_](name)
 
 
 # порождающий паттерн Прототип
@@ -37,13 +42,22 @@ class CarPrototype:
         return deepcopy(self)
 
 
-class Car(CarPrototype):
+class Car(CarPrototype, Subject):
 
     def __init__(self, name, classcar):
         self.name = name
         self.classcar = classcar
         self.classcar.cars.append(self)
+        self.drivers = []
+        super().__init__()
 
+    def __getitem__(self, item):
+        return self.drivers[item]
+
+    def add_driver(self, driver: Driver):
+        self.drivers.append(driver)
+        driver.cars.append(self)
+        self.notify()
 
 # грузовой
 class Truck(Car):
@@ -99,8 +113,8 @@ class Engine:
         self.classescars = []
 
     @staticmethod
-    def create_user(type_):
-        return UserFactory.create(type_)
+    def create_user(type_, name):
+        return UserFactory.create(type_, name)
 
     @staticmethod
     def create_classcar(name, classcar=None):
@@ -122,6 +136,11 @@ class Engine:
             if item.name == name:
                 return item
         return None
+
+    def get_driver(self, name) -> Driver:
+        for item in self.drivers:
+            if item.name == name:
+                return item
 
     @staticmethod
     def decode_value(val):
@@ -152,9 +171,10 @@ class SingletonByName(type):
 
 class Logger(metaclass=SingletonByName):
 
-    def __init__(self, name):
+    def __init__(self, name, writer=FileWriter()):
         self.name = name
+        self.writer = writer
 
-    @staticmethod
-    def log(text):
-        print('log--->', text)
+    def log(self, text):
+        text = f'log---> {text}'
+        self.writer.write(text)

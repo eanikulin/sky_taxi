@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{title}}
+{% endblock %}
+
+{% block style %}
+    {% include "include/inc-style.html" %}
+{% endblock %}
+
+{% block menu %}
+    {% include "include/inc-menu.html" %}
+{% endblock %}
+
+{% block sidebar %}
+    {% include "include/inc-sidebar.html"%}
+{% endblock %}
+{% block content %}
+<div id="content">
+<div>
+            		<li>
+			<a href="/admin/">Назад в административную панель</a>
+		</li>
+		<li>
+			<a href="/driver-list/">Список водителей</a>
+		</li>
+	</div>
+    <div>
+        <h1>Создание водителя</h1>
+        <form method="post">
+            <input type="text" name="name" placeholder="Имя">
+            <button type="submit">Сохранить</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+    {% include "include/inc-footer.html" %}
+{% endblock %}

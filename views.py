@@ -1,12 +1,19 @@
 from sky_framework.templator import render
+from datetime import date
 from patterns.сreational_patterns import Engine, Logger
 from patterns.structural_patterns import AppRoute, Debug
+from patterns.behavioral_patterns import EmailNotifier, SmsNotifier, \
+    ListView, CreateView, BaseSerializer
 
 site = Engine()
 logger = Logger('main')
+email_notifier = EmailNotifier()
+sms_notifier = SmsNotifier()
 routes = {}
 
-def context(request):return {'date': request.get('date', None), 'year': request.get('year', None)}
+
+def context(request): return {'date': request.get('date', None), 'year': request.get('year', None)}
+
 
 @AppRoute(routes=routes, url='/')
 class About:
@@ -16,6 +23,7 @@ class About:
         data['title'] = 'О нас - Sky Taxi'
         return '200 OK', render('index.html', data=data, objects_list=site.classescars)
 
+
 @AppRoute(routes=routes, url='/admin/')
 class AdminPanel:
     @Debug(name='AdminPanel')
@@ -23,6 +31,7 @@ class AdminPanel:
         data = context(request)
         data['title'] = 'Административная панель - Sky Taxi'
         return '200 OK', render('admin.html', data=data, objects_list=site.classescars)
+
 
 # контроллер 404
 class NotFound404:
@@ -70,6 +79,8 @@ class CreateCar:
                 classcar = site.find_classcar_by_id(int(self.classcar_id))
 
                 car = site.create_car('passenger', name, classcar)
+                car.observers.append(email_notifier)
+                car.observers.append(sms_notifier)
                 site.cars.append(car)
 
             return '200 OK', render('car_list.html',
@@ -162,6 +173,51 @@ class CopyCar:
         except KeyError:
             return '200 OK', 'No cars have been added yet'
 
+
+@AppRoute(routes=routes, url='/driver-list/')
+class DriverListView(ListView):
+    queryset = site.drivers
+    template_name = 'drivers_list.html'
+    title = 'Список водителей'
+
+
+@AppRoute(routes=routes, url='/create-driver/')
+class DriverCreateView(CreateView):
+    template_name = 'create_driver.html'
+    title = 'Создание водителя'
+
+    def create_obj(self, data: dict):
+        name = data['name']
+        name = site.decode_value(name)
+        new_obj = site.create_user('driver', name)
+        site.drivers.append(new_obj)
+
+
+@AppRoute(routes=routes, url='/add-driver/')
+class AddDriverByCarCreateView(CreateView):
+    template_name = 'add_driver.html'
+
+    def get_context_data(self):
+        context = super().get_context_data()
+        context['cars'] = site.cars
+        context['drivers'] = site.drivers
+        context['title'] = 'Назначение водителя'
+
+        return context
+
+    def create_obj(self, data: dict):
+        try:
+            car_name = data['car_name']
+            car_name = site.decode_value(car_name)
+            car = site.get_car(car_name)
+            driver_name = data['driver_name']
+            driver_name = site.decode_value(driver_name)
+            driver = site.get_driver(driver_name)
+            car.add_driver(driver)
+        except KeyError:
+            return '200 OK', 'No cars have been added yet'
+
+
 @AppRoute(routes=routes, url='/orders/')
 class Orders:
 
@@ -171,6 +227,7 @@ class Orders:
         data['title'] = 'Заказы - Sky Taxi'
         return '200 OK', render('orders.html', data=data)
 
+
 @AppRoute(routes=routes, url='/contacts/')
 class Contacts:
 
@@ -179,3 +236,10 @@ class Contacts:
         data = context(request)
         data['title'] = 'Контакты - Sky Taxi'
         return '200 OK', render('contacts.html', data=data)
+
+
+@AppRoute(routes=routes, url='/api/')
+class CarApi:
+    @Debug(name='CarApi')
+    def __call__(self, request):
+        return '200 OK', BaseSerializer(site.cars).save()

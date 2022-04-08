@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{title}}
+{% endblock %}
+
+{% block style %}
+{% include "include/inc-style.html" %}
+{% endblock %}
+
+{% block menu %}
+{% include "include/inc-menu.html" %}
+{% endblock %}
+
+{% block sidebar %}
+{% include "include/inc-sidebar.html"%}
+{% endblock %}
+{% block content %}
+<div id="content">
+    <div>
+        <li>
+            <a href="/admin/">Назад в административную панель</a>
+        </li>
+        <li>
+            <a href="/create-driver/">Создать водителя</a>
+        </li>
+        <li>
+            <a href="/add-driver/">Дать разрешение водителю на авто</a>
+        </li>
+    </div>
+    <h1>Список водителей</h1>
+    <div>
+
+        {% for item in objects_list %}
+        <li>
+            {{item.name}}
+            {% for car in item.car %}
+            {{car.name}}
+            {% endfor %}
+        </li>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+{% include "include/inc-footer.html" %}
+{% endblock %}

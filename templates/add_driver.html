@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{data.title}}
+{% endblock %}
+
+{% block style %}
+    {% include "include/inc-style.html" %}
+{% endblock %}
+
+{% block menu %}
+    {% include "include/inc-menu.html" %}
+{% endblock %}
+
+{% block sidebar %}
+    {% include "include/inc-sidebar.html"%}
+{% endblock %}
+{% block content %}
+<div id="content">
+	<div>
+                		<li>
+			<a href="/admin/">Назад в административную панель</a>
+		</li>
+		<li>
+			<a href="/driver-list/">Список водителей</a>
+		</li>
+		<li>
+			<a href="/create-driver/">Создать водителя</a>
+		</li>
+	</div>
+    <h1>Назначение водителя на автомобиль</h1>
+    <form method="post">
+        <select size="3" name="car_name">
+            {% for item in cars %}
+            <option value="{{item.name}}">{{item.name}}</option>
+            {% endfor %}
+        </select>
+        <select size="3" name="driver_name">
+            {% for item in drivers %}
+            <option value="{{item.name}}">{{item.name}}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Назначить</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block footer %}
+    {% include "include/inc-footer.html" %}
+{% endblock %}

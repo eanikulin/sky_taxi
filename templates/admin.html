@@ -19,7 +19,7 @@
 <div id="content">
     <!-- insert the page content here -->
     <h1>Страница для администратора</h1>
-    <p>Создайте категории авто для такси и классами автомобилей.</p>
+    <p>1. Создайте категории авто для такси и классами автомобилей.</p>
     <ul>{% for item in objects_list %}
         <li>- {{item.name}} <span>доступных авто: </span>
             <a href="/cars-list/?id={{item.id}}">Показать авто</a>
@@ -29,6 +29,18 @@
 		<a href="/create-classcar/">Создать новый класс авто</a>
 	</div>
     </ul>
+    <p>2. Далее создайте конкретных водителей и назначьте их на автомобили.</p>
+        <div>
+		<li>
+			<a href="/driver-list/">Список водителей</a>
+		</li>
+		<li>
+			<a href="/create-driver/">Создать Водителя</a>
+		</li>
+		<li>
+			<a href="/add-driver/">Назначить водителя на автомобиль</a>
+		</li>
+	</div>
 </div>
 {% endblock %}
 
