@@ -1,16 +1,18 @@
 from sky_framework.templator import render
 from datetime import date
-from patterns.сreational_patterns import Engine, Logger
+from patterns.сreational_patterns import Engine, Logger, MapperRegistry
 from patterns.structural_patterns import AppRoute, Debug
 from patterns.behavioral_patterns import EmailNotifier, SmsNotifier, \
     ListView, CreateView, BaseSerializer
+from patterns.architectural_system_pattern_unit_of_work import UnitOfWork
 
 site = Engine()
 logger = Logger('main')
 email_notifier = EmailNotifier()
 sms_notifier = SmsNotifier()
 routes = {}
-
+UnitOfWork.new_current()
+UnitOfWork.get_current().set_mapper_registry(MapperRegistry)
 
 def context(request): return {'date': request.get('date', None), 'year': request.get('year', None)}
 
@@ -180,6 +182,10 @@ class DriverListView(ListView):
     template_name = 'drivers_list.html'
     title = 'Список водителей'
 
+    def get_queryset(self):
+        mapper = MapperRegistry.get_current_mapper('driver')
+        return mapper.all()
+
 
 @AppRoute(routes=routes, url='/create-driver/')
 class DriverCreateView(CreateView):
@@ -191,6 +197,8 @@ class DriverCreateView(CreateView):
         name = site.decode_value(name)
         new_obj = site.create_user('driver', name)
         site.drivers.append(new_obj)
+        new_obj.mark_new()
+        UnitOfWork.get_current().commit()
 
 
 @AppRoute(routes=routes, url='/add-driver/')
